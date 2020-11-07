@@ -117,41 +117,151 @@ const ctx = canvas.getContext("2d");
 // dx and dy are the increment we want to make on the x or y axis
 //When we use animation with canvas we repaint the canvas over and over, and we can change the positon of things in that repaint
 
-const circle = {
-	x: 200,
+// const circle = {
+// 	x: 200,
+// 	y: 200,
+// 	size: 30,
+// 	dx: 5,
+// 	dy: 4,
+// };
+
+// function drawCircle() {
+// 	ctx.beginPath();
+// 	ctx.arc(circle.x, circle.y, circle.size, 0, Math.PI * 2);
+// 	ctx.fillStyle = "purple";
+// 	ctx.fill();
+// }
+
+// function update() {
+// 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+// 	drawCircle();
+
+// 	// Change Position
+// 	circle.x += circle.dx;
+// 	circle.y += circle.dy;
+
+// 	// Detect side walls
+// 	if (circle.x + circle.size > canvas.width || circle.x - circle.size < 0) {
+// 		circle.dx *= -1;
+// 	}
+
+// 	// Detect floor and ceiling
+// 	if (circle.y + circle.size > canvas.height || circle.y - circle.size < 0) {
+// 		circle.dy *= -1;
+// 	}
+
+// 	if (circle.y + circle.size) requestAnimationFrame(update);
+// }
+
+// update();
+
+// Animation 2 - Character
+
+const image = document.getElementById("source");
+
+const player = {
+	w: 50,
+	h: 70,
+	x: 20,
 	y: 200,
-	size: 30,
-	dx: 5,
-	dy: 4,
+	speed: 10,
+	dx: 0,
+	dy: 0,
 };
 
-function drawCircle() {
-	ctx.beginPath();
-	ctx.arc(circle.x, circle.y, circle.size, 0, Math.PI * 2);
-	ctx.fillStyle = "purple";
-	ctx.fill();
+function drawPlayer() {
+	ctx.drawImage(image, player.x, player.y, player.w, player.h);
+}
+
+function clear() {
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function newPos() {
+	player.x += player.dx;
+	player.y += player.dy;
+
+	detectWalls();
+}
+
+function detectWalls() {
+	// Left Wall
+	if (player.x < 0) {
+		player.x = 0;
+	}
+
+	//Right wall
+	if (player.x + player.w > canvas.width) {
+		player.x = canvas.width - player.w;
+	}
+
+	// Ceiling
+	if (player.y < 0) {
+		player.y = 0;
+	}
+
+	// Floor
+	if (player.y + player.h > canvas.height) {
+		player.y = canvas.height - player.h;
+	}
 }
 
 function update() {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	clear();
 
-	drawCircle();
+	drawPlayer();
 
-	// Change Position
-	circle.x += circle.dx;
-	circle.y += circle.dy;
+	newPos();
 
-	// Detect side walls
-	if (circle.x + circle.size > canvas.width || circle.x - circle.size < 0) {
-		circle.dx *= -1;
+	requestAnimationFrame(update);
+}
+
+function moveUp() {
+	player.dy = -player.speed;
+}
+
+function moveDown() {
+	player.dy = +player.speed;
+}
+
+function moveRight() {
+	player.dx = +player.speed;
+}
+
+function moveLeft() {
+	player.dx = -player.speed;
+}
+
+function keyDown(e) {
+	if (e.key === "ArrowRight" || e.key === "Right") {
+		moveRight();
+	} else if (e.key === "ArrowLeft" || e.key === "Left") {
+		moveLeft();
+	} else if (e.key === "ArrowUp" || e.key === "Up") {
+		moveUp();
+	} else if (e.key === "ArrowDown" || e.key === "Down") {
+		moveDown();
 	}
+}
 
-	// Detect floor and ceiling
-	if (circle.y + circle.size > canvas.height || circle.y - circle.size < 0) {
-		circle.dy *= -1;
+function keyUp(e) {
+	if (
+		e.key == "Right" ||
+		e.key == "ArrowRight" ||
+		e.key == "Left" ||
+		e.key == "ArrowLeft" ||
+		e.key == "Up" ||
+		e.key == "ArrowUp" ||
+		e.key == "Down" ||
+		e.key == "ArrowDown"
+	) {
+		player.dx = 0;
+		player.dy = 0;
 	}
-
-	if (circle.y + circle.size) requestAnimationFrame(update);
 }
 
 update();
+
+document.addEventListener("keydown", keyDown);
+document.addEventListener("keyup", keyUp);
