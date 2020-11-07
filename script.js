@@ -69,46 +69,89 @@ const ctx = canvas.getContext("2d");
 
 // Arc (circle)
 // Arc takes in an x and y value, the positioning for x and y is going to be the middle of the arc, or the middle of the circle, then the radius the size, start angle, end andle, and anticlockwise or not
-ctx.beginPath();
+// ctx.beginPath();
 
-const centerX = canvas.width / 2;
-const centerY = canvas.height / 2;
+// const centerX = canvas.width / 2;
+// const centerY = canvas.height / 2;
 
-// draw the head
-ctx.arc(centerX, centerY, 200, 0, Math.PI * 2);
+// // draw the head
+// ctx.arc(centerX, centerY, 200, 0, Math.PI * 2);
 
-// Move to mouth
-ctx.moveTo(centerX + 100, centerY);
+// // Move to mouth
+// ctx.moveTo(centerX + 100, centerY);
 
-// Draw mouth
-ctx.arc(centerX, centerY, 100, 0, Math.PI, false);
+// // Draw mouth
+// ctx.arc(centerX, centerY, 100, 0, Math.PI, false);
 
-// Move to left eye
-ctx.moveTo(centerX - 60, centerY - 80);
+// // Move to left eye
+// ctx.moveTo(centerX - 60, centerY - 80);
 
-//Draw left eye
-ctx.arc(centerX - 80, centerY - 80, 20, 0, Math.PI * 2);
+// //Draw left eye
+// ctx.arc(centerX - 80, centerY - 80, 20, 0, Math.PI * 2);
 
-// Move to right eye
-ctx.moveTo(centerX + 100, centerY - 80);
+// // Move to right eye
+// ctx.moveTo(centerX + 100, centerY - 80);
 
-// Draw right eye
-ctx.arc(centerX + 80, centerY - 80, 20, 0, Math.PI * 2);
+// // Draw right eye
+// ctx.arc(centerX + 80, centerY - 80, 20, 0, Math.PI * 2);
 
-// An arc is a circle or half circle
-// There are also curves like bezier curves
-// and quadratic curves, quadratic has one control point
-// The first two argetn are x and y values of that control point
-// For a bezier curve, we have 2 diff control points
-// x and y for first, and x and y for next
+// // An arc is a circle or half circle
+// // There are also curves like bezier curves
+// // and quadratic curves, quadratic has one control point
+// // The first two argetn are x and y values of that control point
+// // For a bezier curve, we have 2 diff control points
+// // x and y for first, and x and y for next
 
-// Quadratic Curve
-ctx.moveTo(75, 25);
-ctx.quadraticCurveTo(25, 25, 25, 62.5);
-ctx.quadraticCurveTo(25, 100, 50, 100);
-ctx.quadraticCurveTo(50, 120, 30, 125);
-ctx.quadraticCurveTo(60, 120, 65, 100);
-ctx.quadraticCurveTo(125, 100, 125, 62.5);
-ctx.quadraticCurveTo(125, 25, 75, 25);
+// // Quadratic Curve
+// ctx.moveTo(75, 25);
+// ctx.quadraticCurveTo(25, 25, 25, 62.5);
+// ctx.quadraticCurveTo(25, 100, 50, 100);
+// ctx.quadraticCurveTo(50, 120, 30, 125);
+// ctx.quadraticCurveTo(60, 120, 65, 100);
+// ctx.quadraticCurveTo(125, 100, 125, 62.5);
+// ctx.quadraticCurveTo(125, 25, 75, 25);
 
-ctx.stroke();
+// ctx.stroke();
+
+// Animation 1
+// dx and dy are the increment we want to make on the x or y axis
+//When we use animation with canvas we repaint the canvas over and over, and we can change the positon of things in that repaint
+
+const circle = {
+	x: 200,
+	y: 200,
+	size: 30,
+	dx: 5,
+	dy: 4,
+};
+
+function drawCircle() {
+	ctx.beginPath();
+	ctx.arc(circle.x, circle.y, circle.size, 0, Math.PI * 2);
+	ctx.fillStyle = "purple";
+	ctx.fill();
+}
+
+function update() {
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	drawCircle();
+
+	// Change Position
+	circle.x += circle.dx;
+	circle.y += circle.dy;
+
+	// Detect side walls
+	if (circle.x + circle.size > canvas.width || circle.x - circle.size < 0) {
+		circle.dx *= -1;
+	}
+
+	// Detect floor and ceiling
+	if (circle.y + circle.size > canvas.height || circle.y - circle.size < 0) {
+		circle.dy *= -1;
+	}
+
+	if (circle.y + circle.size) requestAnimationFrame(update);
+}
+
+update();
