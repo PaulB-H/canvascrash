@@ -14,6 +14,8 @@ HTML5 Canvas element
 [developer.mozilla - getContext](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext)
 getContext()
 
+    const ctx = canvas.getContext("2d");
+
 <hr>
 
 ## Rectangle
